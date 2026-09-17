@@ -3,7 +3,9 @@ import {
     loginUser,
     logoutUser,
     watchAuth,
-    getUserProfile
+    getUserProfile,
+    uploadProfilePicture,
+    completeProfileWithoutPhoto
 } from "./firebase.js";
 
 
@@ -748,3 +750,570 @@ window.RPWAuth = {
     logout: logoutUser
 
 };
+
+/* =========================================
+   RPW AUTHENTICATION UI
+========================================= */
+
+let currentRPWUser = null;
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const authScreen =
+    document.getElementById("authScreen");
+
+const profileSetup =
+    document.getElementById("profileSetup");
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const registerForm =
+    document.getElementById("registerForm");
+
+const authTitle =
+    document.getElementById("authTitle");
+
+const authSubtitle =
+    document.getElementById("authSubtitle");
+
+const authSwitchText =
+    document.getElementById("authSwitchText");
+
+const authSwitchButton =
+    document.getElementById("authSwitchButton");
+
+const authError =
+    document.getElementById("authError");
+
+const profileSetupError =
+    document.getElementById(
+        "profileSetupError"
+    );
+
+const profilePictureInput =
+    document.getElementById(
+        "profilePictureInput"
+    );
+
+const profilePreview =
+    document.getElementById(
+        "profilePreview"
+    );
+
+const chooseProfilePicture =
+    document.getElementById(
+        "chooseProfilePicture"
+    );
+
+const skipProfilePicture =
+    document.getElementById(
+        "skipProfilePicture"
+    );
+
+
+/* =========================================
+   AUTH MODE
+========================================= */
+
+let authMode = "login";
+
+
+function setAuthMode(mode) {
+
+    authMode = mode;
+
+    authError.textContent = "";
+
+
+    if (mode === "register") {
+
+        loginForm.classList.add("hidden");
+
+        registerForm.classList.remove(
+            "hidden"
+        );
+
+        authTitle.textContent =
+            "Create your account";
+
+        authSubtitle.textContent =
+            "Join RPW: Seller World and start trading.";
+
+        authSwitchText.textContent =
+            "Already have an account?";
+
+        authSwitchButton.textContent =
+            "Login";
+
+    } else {
+
+        registerForm.classList.add("hidden");
+
+        loginForm.classList.remove(
+            "hidden"
+        );
+
+        authTitle.textContent =
+            "Welcome back";
+
+        authSubtitle.textContent =
+            "Login to continue to Seller World.";
+
+        authSwitchText.textContent =
+            "Don't have an account?";
+
+        authSwitchButton.textContent =
+            "Create Account";
+
+    }
+
+}
+
+
+authSwitchButton.addEventListener(
+    "click",
+    () => {
+
+        setAuthMode(
+            authMode === "login"
+                ? "register"
+                : "login"
+        );
+
+    }
+);
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+loginForm.addEventListener(
+    "submit",
+    async (event) => {
+
+        event.preventDefault();
+
+        authError.textContent =
+            "Logging in...";
+
+
+        const email =
+            document
+                .getElementById("loginEmail")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("loginPassword")
+                .value;
+
+
+        try {
+
+            await loginUser(
+                email,
+                password
+            );
+
+            authError.textContent = "";
+
+        } catch (error) {
+
+            console.error(error);
+
+            authError.textContent =
+                getAuthErrorMessage(error);
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   REGISTER
+========================================= */
+
+registerForm.addEventListener(
+    "submit",
+    async (event) => {
+
+        event.preventDefault();
+
+        authError.textContent =
+            "Creating your account...";
+
+
+        const username =
+            document
+                .getElementById(
+                    "registerUsername"
+                )
+                .value
+                .trim();
+
+        const email =
+            document
+                .getElementById(
+                    "registerEmail"
+                )
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById(
+                    "registerPassword"
+                )
+                .value;
+
+
+        if (username.length < 3) {
+
+            authError.textContent =
+                "Username must be at least 3 characters.";
+
+            return;
+
+        }
+
+
+        try {
+
+            await registerUser(
+                email,
+                password,
+                username
+            );
+
+            authError.textContent = "";
+
+        } catch (error) {
+
+            console.error(error);
+
+            authError.textContent =
+                getAuthErrorMessage(error);
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   PROFILE PICTURE PICKER
+========================================= */
+
+chooseProfilePicture.addEventListener(
+    "click",
+    () => {
+
+        profilePictureInput.click();
+
+    }
+);
+
+
+/* =========================================
+   PREVIEW
+========================================= */
+
+profilePictureInput.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            profilePictureInput.files[0];
+
+        if (!file) return;
+
+
+        if (!file.type.startsWith("image/")) {
+
+            profileSetupError.textContent =
+                "Please choose an image.";
+
+            return;
+
+        }
+
+
+        if (file.size > 5 * 1024 * 1024) {
+
+            profileSetupError.textContent =
+                "Image must be 5MB or smaller.";
+
+            return;
+
+        }
+
+
+        profileSetupError.textContent = "";
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            (event) => {
+
+                profilePreview.innerHTML = `
+                    <img
+                        src="${event.target.result}"
+                        alt="Profile preview"
+                    >
+                `;
+
+            };
+
+
+        reader.readAsDataURL(file);
+
+    }
+);
+
+
+/* =========================================
+   SAVE PROFILE PICTURE
+========================================= */
+
+profilePictureInput.addEventListener(
+    "change",
+    async () => {
+
+        const file =
+            profilePictureInput.files[0];
+
+        if (!file) return;
+
+        if (!currentRPWUser) return;
+
+
+        chooseProfilePicture.disabled =
+            true;
+
+        chooseProfilePicture.textContent =
+            "Uploading...";
+
+
+        try {
+
+            await uploadProfilePicture(
+                currentRPWUser.uid,
+                file
+            );
+
+
+            profileSetup.classList.add(
+                "hidden"
+            );
+
+            authScreen.classList.add(
+                "hidden"
+            );
+
+            showPage("home");
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            profileSetupError.textContent =
+                error.message ||
+                "Upload failed.";
+
+            chooseProfilePicture.disabled =
+                false;
+
+            chooseProfilePicture.textContent =
+                "Choose Profile Picture";
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   SKIP PROFILE PICTURE
+========================================= */
+
+skipProfilePicture.addEventListener(
+    "click",
+    async () => {
+
+        if (!currentRPWUser) return;
+
+
+        skipProfilePicture.disabled =
+            true;
+
+        skipProfilePicture.textContent =
+            "Setting up...";
+
+
+        try {
+
+            await completeProfileWithoutPhoto(
+                currentRPWUser.uid
+            );
+
+
+            profileSetup.classList.add(
+                "hidden"
+            );
+
+            authScreen.classList.add(
+                "hidden"
+            );
+
+            showPage("home");
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            profileSetupError.textContent =
+                "Something went wrong. Please try again.";
+
+            skipProfilePicture.disabled =
+                false;
+
+            skipProfilePicture.textContent =
+                "Skip for now";
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   AUTH STATE
+========================================= */
+
+watchAuth(
+    async (user) => {
+
+        currentRPWUser = user;
+
+
+        /* No account */
+
+        if (!user) {
+
+            authScreen.classList.remove(
+                "hidden"
+            );
+
+            profileSetup.classList.add(
+                "hidden"
+            );
+
+            setAuthMode("login");
+
+            return;
+
+        }
+
+
+        /* User exists */
+
+        try {
+
+            const profile =
+                await getUserProfile(
+                    user.uid
+                );
+
+
+            if (
+                profile &&
+                profile.profileCompleted
+            ) {
+
+                /* Existing completed user */
+
+                authScreen.classList.add(
+                    "hidden"
+                );
+
+                profileSetup.classList.add(
+                    "hidden"
+                );
+
+                showPage("home");
+
+            } else {
+
+                /* New user */
+
+                authScreen.classList.add(
+                    "hidden"
+                );
+
+                profileSetup.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Profile loading error:",
+                error
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   FIREBASE ERROR TRANSLATOR
+========================================= */
+
+function getAuthErrorMessage(error) {
+
+    switch (error.code) {
+
+        case "auth/email-already-in-use":
+            return "That email is already registered.";
+
+        case "auth/invalid-email":
+            return "Please enter a valid email.";
+
+        case "auth/weak-password":
+            return "Password must be at least 6 characters.";
+
+        case "auth/invalid-credential":
+            return "Incorrect email or password.";
+
+        case "auth/user-not-found":
+            return "No account was found with that email.";
+
+        case "auth/wrong-password":
+            return "Incorrect email or password.";
+
+        case "auth/too-many-requests":
+            return "Too many attempts. Please try again later.";
+
+        default:
+            return "Something went wrong. Please try again.";
+
+    }
+
+}
