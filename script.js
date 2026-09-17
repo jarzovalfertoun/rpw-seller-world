@@ -1,10 +1,11 @@
 import {
-  registerUser,
-  loginUser,
-  logoutUser,
-  watchAuth,
-  getUserProfile
+    registerUser,
+    loginUser,
+    logoutUser,
+    watchAuth,
+    getUserProfile
 } from "./firebase.js";
+
 
 /* =========================================
    RPW: SELLER WORLD
@@ -14,11 +15,6 @@ import {
 
 /* =========================================
    DEMO PRODUCTS
-
-   IMPORTANT:
-   These are temporary.
-
-   Later these will come from the backend.
 ========================================= */
 
 let products = [
@@ -104,7 +100,8 @@ let products = [
 
 function showPage(pageId) {
 
-    const pages = document.querySelectorAll(".page");
+    const pages =
+        document.querySelectorAll(".page");
 
     pages.forEach(page => {
         page.classList.remove("active");
@@ -118,8 +115,6 @@ function showPage(pageId) {
         selectedPage.classList.add("active");
     }
 
-
-    /* Update bottom navigation */
 
     const navItems =
         document.querySelectorAll(".nav-item");
@@ -141,8 +136,6 @@ function showPage(pageId) {
     });
 
 
-    /* Refresh search page */
-
     if (pageId === "search") {
         renderSearchResults(products);
     }
@@ -152,10 +145,6 @@ function showPage(pageId) {
 
 /* =========================================
    BADGE GENERATOR
-
-   TEMPORARY FRONTEND VERSION.
-
-   SECURITY VERSION COMES LATER.
 ========================================= */
 
 function getBadge(orders) {
@@ -173,6 +162,7 @@ function getBadge(orders) {
 
     }
 
+
     if (orders >= 10) {
 
         return `
@@ -185,6 +175,7 @@ function getBadge(orders) {
         `;
 
     }
+
 
     return "";
 
@@ -237,6 +228,7 @@ function createProductCard(product) {
         </article>
 
     `;
+
 }
 
 
@@ -250,6 +242,7 @@ function renderProducts() {
         document.getElementById("homeProducts");
 
     if (!container) return;
+
 
     container.innerHTML =
         products
@@ -298,11 +291,14 @@ function renderSearchResults(list) {
         `;
 
         return;
+
     }
 
 
     container.innerHTML =
-        list.map(createProductCard).join("");
+        list
+            .map(createProductCard)
+            .join("");
 
 }
 
@@ -346,8 +342,6 @@ function searchProducts(value) {
     renderSearchResults(results);
 
 
-    /* Keep both search fields synchronized */
-
     const desktop =
         document.getElementById("desktopSearch");
 
@@ -356,11 +350,20 @@ function searchProducts(value) {
 
 
     if (document.activeElement === desktop) {
-        if (mobile) mobile.value = value;
+
+        if (mobile) {
+            mobile.value = value;
+        }
+
     }
 
+
     if (document.activeElement === mobile) {
-        if (desktop) desktop.value = value;
+
+        if (desktop) {
+            desktop.value = value;
+        }
+
     }
 
 }
@@ -415,7 +418,8 @@ function setSearchTab(button, type) {
 
         results =
             products.filter(
-                p => p.category === "Services"
+                p =>
+                    p.category === "Services"
             );
 
     }
@@ -425,7 +429,8 @@ function setSearchTab(button, type) {
 
         results =
             products.filter(
-                p => p.category !== "Services"
+                p =>
+                    p.category !== "Services"
             );
 
     }
@@ -438,8 +443,6 @@ function setSearchTab(button, type) {
 
 /* =========================================
    OPEN PRODUCT
-
-   Temporary demo behavior.
 ========================================= */
 
 function openProduct(id) {
@@ -468,17 +471,19 @@ function createDemoListing() {
     const name =
         document.getElementById(
             "productName"
-        ).value.trim();
+        )?.value.trim();
+
 
     const price =
         document.getElementById(
             "productPrice"
-        ).value;
+        )?.value;
+
 
     const category =
         document.getElementById(
             "productCategory"
-        ).value;
+        )?.value;
 
 
     if (!name || !price) {
@@ -488,6 +493,7 @@ function createDemoListing() {
         );
 
         return;
+
     }
 
 
@@ -517,17 +523,35 @@ function createDemoListing() {
     products.unshift(newProduct);
 
 
-    document.getElementById(
-        "productName"
-    ).value = "";
+    const nameInput =
+        document.getElementById(
+            "productName"
+        );
 
-    document.getElementById(
-        "productPrice"
-    ).value = "";
+    const priceInput =
+        document.getElementById(
+            "productPrice"
+        );
 
-    document.getElementById(
-        "productDescription"
-    ).value = "";
+    const descriptionInput =
+        document.getElementById(
+            "productDescription"
+        );
+
+
+    if (nameInput) {
+        nameInput.value = "";
+    }
+
+
+    if (priceInput) {
+        priceInput.value = "";
+    }
+
+
+    if (descriptionInput) {
+        descriptionInput.value = "";
+    }
 
 
     renderProducts();
@@ -559,6 +583,7 @@ function requestMidman() {
 
 let toastTimer;
 
+
 function showToast(message) {
 
     const toast =
@@ -567,8 +592,12 @@ function showToast(message) {
     if (!toast) return;
 
 
-    toast.querySelector("p").textContent =
-        message;
+    const text =
+        toast.querySelector("p");
+
+    if (text) {
+        text.textContent = message;
+    }
 
 
     toast.classList.add("show");
@@ -577,22 +606,18 @@ function showToast(message) {
     clearTimeout(toastTimer);
 
 
-    toastTimer = setTimeout(() => {
+    toastTimer =
+        setTimeout(() => {
 
-        toast.classList.remove("show");
+            toast.classList.remove("show");
 
-    }, 2500);
+        }, 2500);
 
 }
 
 
 /* =========================================
    SECURITY HELPER
-
-   Prevents basic HTML injection when
-   displaying user-entered text.
-
-   Backend validation will also be required.
 ========================================= */
 
 function escapeHTML(value) {
@@ -622,34 +647,104 @@ document.addEventListener(
     }
 );
 
-// ==========================================
-// RPW AUTH STATE
-// ==========================================
+
+/* =========================================
+   FIREBASE AUTH STATE
+========================================= */
 
 watchAuth(async (user) => {
 
-  if (user) {
+    if (user) {
 
-    console.log("RPW user logged in:", user.email);
+        console.log(
+            "RPW user logged in:",
+            user.email
+        );
 
-    const profile = await getUserProfile(user.uid);
 
-    if (profile) {
+        try {
 
-      console.log("RPW Profile:", profile);
+            const profile =
+                await getUserProfile(
+                    user.uid
+                );
 
-      // Update your existing profile UI here later.
-      // Example:
-      //
-      // document.querySelector(".profile-name").textContent =
-      //   profile.username;
+
+            if (profile) {
+
+                console.log(
+                    "RPW Profile:",
+                    profile
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Failed to load RPW profile:",
+                error
+            );
+
+        }
+
+    } else {
+
+        console.log(
+            "No RPW user logged in."
+        );
 
     }
 
-  } else {
-
-    console.log("No RPW user logged in.");
-
-  }
-
 });
+
+
+/* =========================================
+   IMPORTANT
+   MODULE SCRIPTS DO NOT AUTOMATICALLY
+   CREATE GLOBAL FUNCTIONS.
+
+   Your existing HTML uses onclick="..."
+   so we expose these functions globally.
+========================================= */
+
+window.showPage =
+    showPage;
+
+window.searchProducts =
+    searchProducts;
+
+window.filterCategory =
+    filterCategory;
+
+window.setSearchTab =
+    setSearchTab;
+
+window.openProduct =
+    openProduct;
+
+window.createDemoListing =
+    createDemoListing;
+
+window.requestMidman =
+    requestMidman;
+
+window.showToast =
+    showToast;
+
+
+/* =========================================
+   OPTIONAL GLOBAL AUTH FUNCTIONS
+   We'll use these for the Login/Register
+   UI in the next step.
+========================================= */
+
+window.RPWAuth = {
+
+    register: registerUser,
+
+    login: loginUser,
+
+    logout: logoutUser
+
+};
