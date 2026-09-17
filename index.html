@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPW: Seller World - Trusted Marketplace</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#1d61f2',
+              700: '#1d4ed8',
+              900: '#0f172a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Glassmorphism Effects */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    /* Page View Transitions */
+    .page-screen {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+      transform: translateY(6px);
+    }
+
+    .page-screen.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Skeleton Loading Animation */
+    @keyframes pulse-fast {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .animate-pulse-fast {
+      animation: pulse-fast 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased pb-20 md:pb-0">
+
+  <!-- ================= TOP HEADER (Desktop & Mobile) ================= -->
+  <header class="sticky top-0 z-40 w-full glass-card border-b border-slate-200/80 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <!-- Logo -->
+      <div class="flex items-center gap-2 cursor-pointer" onclick="switchPage('home')">
+        <div class="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-brand-600/30 font-bold text-xl">
+          👑
+        </div>
+        <div>
+          <h1 class="font-extrabold text-lg leading-none tracking-tight text-brand-900">
+            RPW: <span class="text-brand-600">SELLER WORLD</span>
+          </h1>
+          <p class="text-[10px] text-slate-500 font-medium tracking-wide uppercase">Trade Freely. Choose Protection.</p>
+        </div>
+      </div>
+
+      <!-- Desktop Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-md relative">
+        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+        <input type="text" placeholder="Search for products, services, or sellers..." class="w-full bg-slate-100/80 border border-slate-200 rounded-full pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600/50" />
+      </div>
+
+      <!-- Desktop Navigation Actions -->
+      <div class="hidden md:flex items-center gap-3">
+        <button onclick="switchPage('home')" class="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600">Home</button>
+        <button onclick="switchPage('search')" class="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600">Search</button>
+        <button onclick="switchPage('midman-hub')" class="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600">Midman Hub</button>
+        <button onclick="switchPage('transaction')" class="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600">Orders</button>
+        <button onclick="switchPage('chat')" class="px-3 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600">Chat</button>
+        <button onclick="switchPage('profile')" class="ml-2 px-4 py-2 bg-brand-600 text-white rounded-full text-sm font-semibold shadow-md shadow-brand-600/20 hover:bg-brand-700 transition">
+          My Account
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT CONTAINER ================= -->
+  <main class="max-w-7xl mx-auto px-4 py-6">
+
+    <!-- PAGE 1: HOME PAGE -->
+    <section id="page-home" class="page-screen active">
+      <!-- Banner -->
+      <div class="relative bg-gradient-to-r from-brand-600 via-brand-500 to-blue-400 rounded-3xl p-6 md:p-10 text-white shadow-xl shadow-brand-600/15 overflow-hidden mb-8">
+        <div class="relative z-10 max-w-lg">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white backdrop-blur-md mb-3">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 100% Safe RPW Marketplace
+          </span>
+          <h2 class="text-2xl md:text-4xl font-black tracking-tight mb-2">Safe Transactions with Verified Midmen</h2>
+          <p class="text-white/90 text-sm md:text-base mb-6">Trade accounts (FB, IG, TikTok, MLBB), load/data, recruitments, and digital goods without getting scammed.</p>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="switchPage('midman-hub')" class="bg-white text-brand-600 px-5 py-2.5 rounded-full font-bold text-sm shadow-md hover:bg-slate-100 transition">
+              Find a Midman →
+            </button>
+            <button onclick="switchPage('search')" class="bg-brand-700/50 hover:bg-brand-700 text-white border border-white/30 px-5 py-2.5 rounded-full font-semibold text-sm backdrop-blur-md transition">
+              Explore Products
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Trust Indicators -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-brand-600 flex items-center justify-center font-bold">
+            <i data-lucide="badge-check"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-800">Verified Sellers</h4>
+            <p class="text-[11px] text-slate-500">Real & trusted badge</p>
+          </div>
+        </div>
+        <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center font-bold">
+            <i data-lucide="shield"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-800">Trusted Midmen</h4>
+            <p class="text-[11px] text-slate-500">Safer escrow system</p>
+          </div>
+        </div>
+        <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+            <i data-lucide="message-square"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-800">Secure Chat</h4>
+            <p class="text-[11px] text-slate-500">Direct communication</p>
+          </div>
+        </div>
+        <div class="glass-card p-4 rounded-2xl flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+            <i data-lucide="headphones"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-800">24/7 Support</h4>
+            <p class="text-[11px] text-slate-500">Dispute assistance</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Popular Categories</h3>
+          <button onclick="switchPage('search')" class="text-xs font-bold text-brand-600 hover:underline">View all →</button>
+        </div>
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+          <button onclick="filterCategory('accounts')" class="glass-card p-3 rounded-2xl flex flex-col items-center text-center gap-2 hover:border-brand-500 transition">
+            <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-xl flex items-center justify-center">
+              <i data-lucide="user-check"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700">Accounts</span>
+          </button>
+          <button onclick="filterCategory('load')" class="glass-card p-3 rounded-2xl flex flex-col items-center text-center gap-2 hover:border-brand-500 transition">
+            <div class="w-12 h-12 bg-cyan-50 text-cyan-600 rounded-xl flex items-center justify-center">
+              <i data-lucide="smartphone"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700">Load / Data</span>
+          </button>
+          <button onclick="filterCategory('gaming')" class="glass-card p-3 rounded-2xl flex flex-col items-center text-center gap-2 hover:border-brand-500 transition">
+            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center">
+              <i data-lucide="gamepad-2"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700">Gaming</span>
+          </button>
+          <button onclick="filterCategory('social')" class="glass-card p-3 rounded-2xl flex flex-col items-center text-center gap-2 hover:border-brand-500 transition">
+            <div class="w-12 h-12 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center">
+              <i data-lucide="instagram"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700">Social Media</span>
+          </button>
+          <button onclick="filterCategory('services')" class="glass-card p-3 rounded-2xl flex flex-col items-center text-center gap-2 hover:border-brand-500 transition">
+            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+              <i data-lucide="briefcase"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700">Services</span>
+          </button>
+          <button onclick="filterCategory('other')" class="glass-card p-3 rounded-2xl flex flex-col items-center text-center gap-2 hover:border-brand-500 transition">
+            <div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center">
+              <i data-lucide="more-horizontal"></i>
+            </div>
+            <span class="text-xs font-semibold text-slate-700">Other</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Recommended Listings Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Recommended for You</h3>
+          <button onclick="switchPage('search')" class="text-xs font-bold text-brand-600 hover:underline">View all →</button>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="listings-grid">
+          <!-- Listing Card 1 -->
+          <div onclick="openProductDetail(1)" class="glass-card rounded-2xl overflow-hidden hover:shadow-lg transition cursor-pointer group">
+            <div class="relative h-36 bg-slate-200 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+              <span class="absolute top-2 right-2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3 h-3"></i> Verified
+              </span>
+            </div>
+            <div class="p-3">
+              <h4 class="font-bold text-sm text-slate-900 line-clamp-1">Instagram Account (Clean / Fresh)</h4>
+              <p class="text-brand-600 font-extrabold text-base mt-0.5">₱ 1,200</p>
+              <div class="flex items-center gap-1 text-[11px] text-slate-500 mt-2">
+                <i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500"></i>
+                <span class="font-bold text-slate-700">4.9</span> (128 reviews)
+              </div>
+            </div>
+          </div>
+
+          <!-- Listing Card 2 -->
+          <div onclick="openProductDetail(2)" class="glass-card rounded-2xl overflow-hidden hover:shadow-lg transition cursor-pointer group">
+            <div class="relative h-36 bg-slate-200 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+            </div>
+            <div class="p-3">
+              <h4 class="font-bold text-sm text-slate-900 line-clamp-1">MLBB Account (Mythic 100+ Skins)</h4>
+              <p class="text-brand-600 font-extrabold text-base mt-0.5">₱ 800</p>
+              <div class="flex items-center gap-1 text-[11px] text-slate-500 mt-2">
+                <i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500"></i>
+                <span class="font-bold text-slate-700">4.8</span> (86 reviews)
+              </div>
+            </div>
+          </div>
+
+          <!-- Listing Card 3 -->
+          <div onclick="openProductDetail(3)" class="glass-card rounded-2xl overflow-hidden hover:shadow-lg transition cursor-pointer group">
+            <div class="relative h-36 bg-slate-200 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+            </div>
+            <div class="p-3">
+              <h4 class="font-bold text-sm text-slate-900 line-clamp-1">Spotify Premium (1 Year Warranty)</h4>
+              <p class="text-brand-600 font-extrabold text-base mt-0.5">₱ 150</p>
+              <div class="flex items-center gap-1 text-[11px] text-slate-500 mt-2">
+                <i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500"></i>
+                <span class="font-bold text-slate-700">4.7</span> (72 reviews)
+              </div>
+            </div>
+          </div>
+
+          <!-- Listing Card 4 -->
+          <div onclick="openProductDetail(4)" class="glass-card rounded-2xl overflow-hidden hover:shadow-lg transition cursor-pointer group">
+            <div class="relative h-36 bg-slate-200 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+            </div>
+            <div class="p-3">
+              <h4 class="font-bold text-sm text-slate-900 line-clamp-1">Netflix Premium 4K Account</h4>
+              <p class="text-brand-600 font-extrabold text-base mt-0.5">₱ 180</p>
+              <div class="flex items-center gap-1 text-[11px] text-slate-500 mt-2">
+                <i data-lucide="star" class="w-3 h-3 text-amber-500 fill-amber-500"></i>
+                <span class="font-bold text-slate-700">4.9</span> (105 reviews)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 2: PRODUCT DETAIL -->
+    <section id="page-product-detail" class="page-screen max-w-3xl mx-auto">
+      <button onclick="switchPage('home')" class="mb-4 flex items-center gap-1 text-sm font-bold text-slate-600 hover:text-brand-600">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to listings
+      </button>
+
+      <div class="glass-card rounded-3xl p-6 shadow-sm">
+        <div class="relative h-64 sm:h-80 rounded-2xl overflow-hidden bg-slate-100 mb-6">
+          <img id="detail-img" src="https://images.unsplash.com/photo-1611262588024-d12430b98920?w=800" class="w-full h-full object-cover" />
+          <span class="absolute top-3 left-3 bg-slate-900/80 text-white backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
+            Social Media Services
+          </span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+          <div>
+            <h2 id="detail-title" class="text-2xl font-black text-slate-900">Instagram Account</h2>
+            <div class="flex items-center gap-2 mt-2">
+              <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Verified Seller
+              </span>
+              <span class="bg-blue-100 text-brand-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+                <i data-lucide="shield" class="w-3.5 h-3.5"></i> Midman Available
+              </span>
+            </div>
+          </div>
+          <div>
+            <span class="text-xs text-slate-500 uppercase font-bold tracking-wider block">Price</span>
+            <span id="detail-price" class="text-3xl font-extrabold text-brand-600">₱ 1,200</span>
+          </div>
+        </div>
+
+        <!-- Seller Info Card -->
+        <div class="my-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-brand-600 text-white flex items-center justify-center font-black text-lg">
+              N
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-slate-900 flex items-center gap-1">
+                @NianStore <i data-lucide="badge-check" class="w-4 h-4 text-brand-600"></i>
+              </h4>
+              <p class="text-xs text-slate-500">247 Transactions • 98% Positive Feedback</p>
+            </div>
+          </div>
+          <button onclick="switchPage('chat')" class="px-4 py-2 border border-slate-300 rounded-full text-xs font-bold text-slate-700 hover:bg-white transition">
+            View Profile
+          </button>
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-3">
+          <h3 class="font-bold text-slate-900 text-base">Description</h3>
+          <ul class="text-sm text-slate-600 space-y-1.5 list-disc pl-5">
+            <li>Real and active organic account</li>
+            <li>Email & phone numbers original surrender included</li>
+            <li>No login issues / Clean history</li>
+            <li>100% Safe and legit transaction guarantee</li>
+          </ul>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-8 flex gap-3">
+          <button onclick="switchPage('chat')" class="flex-1 border-2 border-brand-600 text-brand-600 py-3 rounded-full font-bold text-sm hover:bg-brand-50 transition flex items-center justify-center gap-2">
+            <i data-lucide="message-square" class="w-4 h-4"></i> Chat Seller
+          </button>
+          <button onclick="switchPage('transaction')" class="flex-1 bg-brand-600 text-white py-3 rounded-full font-bold text-sm shadow-lg shadow-brand-600/30 hover:bg-brand-700 transition flex items-center justify-center gap-2">
+            <i data-lucide="shopping-bag" class="w-4 h-4"></i> Buy Now / Use Midman
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 3: CHAT ROOM -->
+    <section id="page-chat" class="page-screen max-w-2xl mx-auto">
+      <div class="glass-card rounded-3xl overflow-hidden flex flex-col h-[600px]">
+        <!-- Chat Header -->
+        <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-white/50">
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <div class="w-10 h-10 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center">N</div>
+              <span class="w-3 h-3 bg-emerald-500 border-2 border-white rounded-full absolute bottom-0 right-0"></span>
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-slate-900">NianStore</h4>
+              <span class="text-[11px] text-emerald-600 font-semibold">Online</span>
+            </div>
+          </div>
+          <button onclick="switchPage('midman-hub')" class="text-xs bg-brand-100 text-brand-700 font-bold px-3 py-1.5 rounded-full hover:bg-brand-200 transition">
+            + Request Midman
+          </button>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="flex-1 p-4 overflow-y-auto space-y-3" id="chat-box">
+          <div class="flex justify-start">
+            <div class="bg-slate-200 text-slate-800 text-sm py-2 px-4 rounded-2xl rounded-tl-none max-w-[80%]">
+              Hello! Available pa po yung Instagram account?
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <div class="bg-brand-600 text-white text-sm py-2 px-4 rounded-2xl rounded-tr-none max-w-[80%]">
+              Yes po! Available pa. Pwede po sa Midman para mas safe.
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Box -->
+        <div class="p-3 border-t border-slate-200 bg-white flex gap-2 items-center">
+          <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 bg-slate-100 border border-slate-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600/50" />
+          <button onclick="sendMessage()" class="w-10 h-10 bg-brand-600 text-white rounded-full flex items-center justify-center hover:bg-brand-700 transition">
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 4: MIDMAN HUB & ESCROW ROOM -->
+    <section id="page-midman-hub" class="page-screen max-w-3xl mx-auto">
+      <div class="mb-6">
+        <h2 class="text-2xl font-black text-slate-900">Find a Midman</h2>
+        <p class="text-sm text-slate-500">Choose an approved community Midman to coordinate your transaction safely.</p>
+      </div>
+
+      <!-- Midman Search & List -->
+      <div class="space-y-3">
+        <div class="glass-card p-4 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-black flex items-center justify-center">M</div>
+            <div>
+              <h4 class="font-bold text-sm text-slate-900 flex items-center gap-1">
+                @TrustedMid01 <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+              </h4>
+              <p class="text-xs text-slate-500">1,284 Transactions Completed • Tip Based</p>
+            </div>
+          </div>
+          <button onclick="switchPage('transaction')" class="bg-brand-600 text-white text-xs font-bold px-4 py-2 rounded-full hover:bg-brand-700 transition">
+            Request Midman
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 5: TRANSACTION ROOM -->
+    <section id="page-transaction" class="page-screen max-w-2xl mx-auto">
+      <div class="glass-card rounded-3xl p-6">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+          <div>
+            <span class="text-xs font-bold text-brand-600 uppercase tracking-wider">Transaction #RPW-82K91</span>
+            <h3 class="text-xl font-black text-slate-900">Escrow Transaction Room</h3>
+          </div>
+          <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold">In Progress</span>
+        </div>
+
+        <!-- Status Timeline -->
+        <div class="space-y-6 relative border-l-2 border-slate-200 ml-4 pl-6">
+          <div class="relative">
+            <span class="w-4 h-4 bg-emerald-500 rounded-full absolute -left-[31px] top-1 ring-4 ring-white"></span>
+            <h4 class="font-bold text-sm text-slate-900">1. Transaction Created</h4>
+            <p class="text-xs text-slate-500">Jan 10, 2026 • 10:15 AM</p>
+          </div>
+          <div class="relative">
+            <span class="w-4 h-4 bg-emerald-500 rounded-full absolute -left-[31px] top-1 ring-4 ring-white"></span>
+            <h4 class="font-bold text-sm text-slate-900">2. Midman Joined</h4>
+            <p class="text-xs text-slate-500">@TrustedMid01 is coordinating this transaction.</p>
+          </div>
+          <div class="relative">
+            <span class="w-4 h-4 bg-amber-500 rounded-full absolute -left-[31px] top-1 ring-4 ring-white"></span>
+            <h4 class="font-bold text-sm text-slate-900">3. Payment Confirmation</h4>
+            <p class="text-xs text-slate-500">Waiting for midman to verify buyer payment...</p>
+          </div>
+          <div class="relative opacity-50">
+            <span class="w-4 h-4 bg-slate-300 rounded-full absolute -left-[31px] top-1 ring-4 ring-white"></span>
+            <h4 class="font-bold text-sm text-slate-900">4. Item / Credentials Delivery</h4>
+            <p class="text-xs text-slate-500">Seller delivers account details in private room.</p>
+          </div>
+          <div class="relative opacity-50">
+            <span class="w-4 h-4 bg-slate-300 rounded-full absolute -left-[31px] top-1 ring-4 ring-white"></span>
+            <h4 class="font-bold text-sm text-slate-900">5. Completed & Released</h4>
+            <p class="text-xs text-slate-500">Payment released to seller.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 6: USER PROFILE -->
+    <section id="page-profile" class="page-screen max-w-2xl mx-auto">
+      <div class="glass-card rounded-3xl p-6">
+        <div class="flex items-center gap-4 border-b border-slate-200 pb-6 mb-6">
+          <div class="w-16 h-16 rounded-full bg-brand-600 text-white font-black text-2xl flex items-center justify-center">
+            U
+          </div>
+          <div>
+            <h3 class="font-black text-xl text-slate-900 flex items-center gap-2">
+              @user123 <i data-lucide="badge-check" class="w-5 h-5 text-brand-600"></i>
+            </h3>
+            <p class="text-xs text-slate-500">Member since Jan 2026 • Verified Buyer</p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <button class="w-full text-left p-3.5 rounded-2xl hover:bg-slate-100/80 font-bold text-sm text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-3"><i data-lucide="package"></i> My Listings</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </button>
+          <button class="w-full text-left p-3.5 rounded-2xl hover:bg-slate-100/80 font-bold text-sm text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-3"><i data-lucide="shopping-bag"></i> My Orders</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </button>
+          <button class="w-full text-left p-3.5 rounded-2xl hover:bg-slate-100/80 font-bold text-sm text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-3"><i data-lucide="shield"></i> Midman Earnings</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MOBILE BOTTOM NAVIGATION ================= -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 glass-nav z-50 px-2 py-2">
+    <div class="flex justify-around items-center">
+      <button onclick="switchPage('home')" class="nav-item flex flex-col items-center p-1 text-brand-600" id="nav-home">
+        <i data-lucide="home" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold mt-1">Home</span>
+      </button>
+      <button onclick="switchPage('search')" class="nav-item flex flex-col items-center p-1 text-slate-400" id="nav-search">
+        <i data-lucide="search" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold mt-1">Search</span>
+      </button>
+      <button onclick="switchPage('chat')" class="nav-item flex flex-col items-center p-1 text-slate-400" id="nav-chat">
+        <i data-lucide="message-square" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold mt-1">Chat</span>
+      </button>
+      <button onclick="switchPage('transaction')" class="nav-item flex flex-col items-center p-1 text-slate-400" id="nav-orders">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold mt-1">Orders</span>
+      </button>
+      <button onclick="switchPage('profile')" class="nav-item flex flex-col items-center p-1 text-slate-400" id="nav-profile">
+        <i data-lucide="user" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold mt-1">Profile</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Script for Navigation & Interactions -->
+  <script>
+    // Initialize Icons
+    lucide.createIcons();
+
+    // Page Switching Logic
+    function switchPage(pageId) {
+      // Hide all pages
+      const pages = document.querySelectorAll('.page-screen');
+      pages.forEach(p => p.classList.remove('active'));
+
+      // Show selected page
+      const targetPage = document.getElementById(`page-${pageId}`);
+      if (targetPage) {
+        targetPage.classList.add('active');
+      }
+
+      // Update Navigation Colors
+      const navButtons = document.querySelectorAll('.nav-item');
+      navButtons.forEach(btn => {
+        btn.classList.remove('text-brand-600');
+        btn.classList.add('text-slate-400');
+      });
+
+      const activeNav = document.getElementById(`nav-${pageId}`);
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-400');
+        activeNav.classList.add('text-brand-600');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Chat function
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      if (!input.value.trim()) return;
+
+      const chatBox = document.getElementById('chat-box');
+      const msg = document.createElement('div');
+      msg.className = "flex justify-end";
+      msg.innerHTML = `<div class="bg-brand-600 text-white text-sm py-2 px-4 rounded-2xl rounded-tr-none max-w-[80%]">${input.value}</div>`;
+      chatBox.appendChild(msg);
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Detail Opener
+    function openProductDetail(id) {
+      switchPage('product-detail');
+    }
+
+    function filterCategory(cat) {
+      switchPage('search');
+    }
+  </script>
+</body>
+</html>
