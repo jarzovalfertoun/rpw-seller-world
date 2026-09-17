@@ -1,127 +1,119 @@
 import {
-    registerUser,
-    loginUser,
-    logoutUser,
-    watchAuth,
-    getUserProfile,
-    uploadProfilePicture,
-    completeProfileWithoutPhoto
+registerUser,
+loginUser,
+logoutUser,
+watchAuth,
+getUserProfile,
+completeProfileWithoutPhoto
 } from "./firebase.js";
 
-
 /* =========================================
-   RPW: SELLER WORLD
-   FRONTEND PROTOTYPE
+RPW: SELLER WORLD
 ========================================= */
 
-
 /* =========================================
-   DEMO PRODUCTS
+DEMO PRODUCTS
 ========================================= */
 
 let products = [
+{
+id: 1,
+name: "Premium Digital Service",
+price: 150,
+category: "Services",
+seller: "Alex Digital",
+orders: 27,
+rating: 4.9,
+icon: "⚡",
+badge: "verified"
+},
 
-    {
-        id: 1,
-        name: "Premium Digital Service",
-        price: 150,
-        category: "Services",
-        seller: "Alex Digital",
-        orders: 27,
-        rating: 4.9,
-        icon: "⚡",
-        badge: "verified"
-    },
+{
+    id: 2,
+    name: "Gaming Service Package",
+    price: 250,
+    category: "Gaming",
+    seller: "Marcus Shop",
+    orders: 68,
+    rating: 4.9,
+    icon: "🎮",
+    badge: "rainbow"
+},
 
-    {
-        id: 2,
-        name: "Gaming Service Package",
-        price: 250,
-        category: "Gaming",
-        seller: "Marcus Shop",
-        orders: 68,
-        rating: 4.9,
-        icon: "🎮",
-        badge: "rainbow"
-    },
+{
+    id: 3,
+    name: "Mobile Data Package",
+    price: 99,
+    category: "Load & Data",
+    seller: "Nica Store",
+    orders: 14,
+    rating: 4.8,
+    icon: "📶",
+    badge: "verified"
+},
 
-    {
-        id: 3,
-        name: "Mobile Data Package",
-        price: 99,
-        category: "Load & Data",
-        seller: "Nica Store",
-        orders: 14,
-        rating: 4.8,
-        icon: "📶",
-        badge: "verified"
-    },
+{
+    id: 4,
+    name: "Digital Download",
+    price: 75,
+    category: "Digital Goods",
+    seller: "Ken Digital",
+    orders: 6,
+    rating: 4.7,
+    icon: "💻",
+    badge: null
+},
 
-    {
-        id: 4,
-        name: "Digital Download",
-        price: 75,
-        category: "Digital Goods",
-        seller: "Ken Digital",
-        orders: 6,
-        rating: 4.7,
-        icon: "💻",
-        badge: null
-    },
+{
+    id: 5,
+    name: "Social Media Service",
+    price: 120,
+    category: "Social Media",
+    seller: "Jade Services",
+    orders: 52,
+    rating: 4.9,
+    icon: "📱",
+    badge: "rainbow"
+},
 
-    {
-        id: 5,
-        name: "Social Media Service",
-        price: 120,
-        category: "Social Media",
-        seller: "Jade Services",
-        orders: 52,
-        rating: 4.9,
-        icon: "📱",
-        badge: "rainbow"
-    },
-
-    {
-        id: 6,
-        name: "Custom Online Service",
-        price: 300,
-        category: "Services",
-        seller: "Lance Works",
-        orders: 11,
-        rating: 4.8,
-        icon: "✨",
-        badge: "verified"
-    }
+{
+    id: 6,
+    name: "Custom Online Service",
+    price: 300,
+    category: "Services",
+    seller: "Lance Works",
+    orders: 11,
+    rating: 4.8,
+    icon: "✨",
+    badge: "verified"
+}
 
 ];
 
-
 /* =========================================
-   PAGE NAVIGATION
+PAGE NAVIGATION
 ========================================= */
 
 function showPage(pageId) {
 
-    const pages =
-        document.querySelectorAll(".page");
-
-    pages.forEach(page => {
+document
+    .querySelectorAll(".page")
+    .forEach(page => {
         page.classList.remove("active");
     });
 
 
-    const selectedPage =
-        document.getElementById(pageId);
+const selectedPage =
+    document.getElementById(pageId);
 
-    if (selectedPage) {
-        selectedPage.classList.add("active");
-    }
+if (selectedPage) {
+    selectedPage.classList.add("active");
+}
 
 
-    const navItems =
-        document.querySelectorAll(".nav-item");
-
-    navItems.forEach(item => {
+document
+    .querySelectorAll(".nav-item")
+    .forEach(item => {
 
         item.classList.remove("active");
 
@@ -132,635 +124,484 @@ function showPage(pageId) {
     });
 
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+});
 
 
-    if (pageId === "search") {
-        renderSearchResults(products);
-    }
+if (pageId === "search") {
+    renderSearchResults(products);
+}
 
 }
 
-
 /* =========================================
-   BADGE GENERATOR
+BADGE
 ========================================= */
 
 function getBadge(orders) {
 
-    if (orders >= 50) {
-
-        return `
-            <span
-                class="rainbow-badge"
-                title="50+ completed orders"
-            >
-                ★
-            </span>
-        `;
-
-    }
-
-
-    if (orders >= 10) {
-
-        return `
-            <span
-                class="verified-badge"
-                title="10+ completed orders"
-            >
-                ✓
-            </span>
-        `;
-
-    }
-
-
-    return "";
-
+if (orders >= 50) {
+    return `
+        <span
+            class="rainbow-badge"
+            title="50+ completed orders"
+        >
+            ★
+        </span>
+    `;
 }
 
 
+if (orders >= 10) {
+    return `
+        <span
+            class="verified-badge"
+            title="10+ completed orders"
+        >
+            ✓
+        </span>
+    `;
+}
+
+
+return "";
+
+}
+
 /* =========================================
-   PRODUCT CARD
+PRODUCT CARD
 ========================================= */
 
 function createProductCard(product) {
 
-    return `
+return `
+    <article
+        class="product-card"
+        onclick="openProduct(${product.id})"
+    >
 
-        <article
-            class="product-card"
-            onclick="openProduct(${product.id})"
-        >
+        <div class="product-image">
+            <span>${product.icon}</span>
+        </div>
 
-            <div class="product-image">
-                <span>${product.icon}</span>
+        <div class="product-body">
+
+            <div class="product-title">
+                ${escapeHTML(product.name)}
             </div>
 
-            <div class="product-body">
+            <div class="product-price">
+                ₱${Number(product.price).toLocaleString()}
+            </div>
 
-                <div class="product-title">
-                    ${escapeHTML(product.name)}
-                </div>
+            <div class="product-seller">
 
-                <div class="product-price">
-                    ₱${Number(product.price).toLocaleString()}
-                </div>
-
-                <div class="product-seller">
-
-                    <small>
-                        ${escapeHTML(product.seller)}
-                        ${getBadge(product.orders)}
-                    </small>
-
-                </div>
-
-                <div class="product-rating">
-                    ★ ${product.rating}
-                    · ${product.orders} orders
-                </div>
+                <small>
+                    ${escapeHTML(product.seller)}
+                    ${getBadge(product.orders)}
+                </small>
 
             </div>
 
-        </article>
+            <div class="product-rating">
+                ★ ${product.rating}
+                · ${product.orders} orders
+            </div>
 
-    `;
+        </div>
+
+    </article>
+`;
 
 }
 
-
 /* =========================================
-   RENDER PRODUCTS
+RENDER PRODUCTS
 ========================================= */
 
 function renderProducts() {
 
-    const container =
-        document.getElementById("homeProducts");
+const container =
+    document.getElementById("homeProducts");
 
-    if (!container) return;
+if (!container) return;
 
-
-    container.innerHTML =
-        products
-            .slice(0, 4)
-            .map(createProductCard)
-            .join("");
+container.innerHTML =
+    products
+        .slice(0, 4)
+        .map(createProductCard)
+        .join("");
 
 }
 
-
 /* =========================================
-   SEARCH RESULTS
+SEARCH RESULTS
 ========================================= */
 
 function renderSearchResults(list) {
 
-    const container =
-        document.getElementById("searchResults");
+const container =
+    document.getElementById("searchResults");
 
-    if (!container) return;
+if (!container) return;
 
 
-    if (list.length === 0) {
+if (list.length === 0) {
 
-        container.innerHTML = `
-
-            <div
-                style="
-                    grid-column:1/-1;
-                    padding:50px;
-                    text-align:center;
-                    color:#718096;
-                "
-            >
-
-                <div style="font-size:40px;">
-                    🔎
-                </div>
-
-                <p style="margin-top:10px;">
-                    No listings found.
-                </p>
-
+    container.innerHTML = `
+        <div
+            style="
+                grid-column:1/-1;
+                padding:50px;
+                text-align:center;
+                color:#718096;
+            "
+        >
+            <div style="font-size:40px;">
+                🔎
             </div>
 
-        `;
+            <p style="margin-top:10px;">
+                No listings found.
+            </p>
+        </div>
+    `;
 
-        return;
-
-    }
-
-
-    container.innerHTML =
-        list
-            .map(createProductCard)
-            .join("");
-
+    return;
 }
 
 
+container.innerHTML =
+    list
+        .map(createProductCard)
+        .join("");
+
+}
+
 /* =========================================
-   SEARCH
+SEARCH
 ========================================= */
 
 function searchProducts(value) {
 
-    const query =
-        value.trim().toLowerCase();
+const query =
+    value.trim().toLowerCase();
 
 
-    const results =
-        products.filter(product => {
+const results =
+    products.filter(product => {
 
-            return (
+        return (
+            product.name
+                .toLowerCase()
+                .includes(query)
 
-                product.name
-                    .toLowerCase()
-                    .includes(query)
+            ||
 
-                ||
+            product.category
+                .toLowerCase()
+                .includes(query)
 
-                product.category
-                    .toLowerCase()
-                    .includes(query)
+            ||
 
-                ||
+            product.seller
+                .toLowerCase()
+                .includes(query)
+        );
 
-                product.seller
-                    .toLowerCase()
-                    .includes(query)
-
-            );
-
-        });
+    });
 
 
-    renderSearchResults(results);
+renderSearchResults(results);
 
 
-    const desktop =
-        document.getElementById("desktopSearch");
+const desktop =
+    document.getElementById("desktopSearch");
 
-    const mobile =
-        document.getElementById("mobileSearch");
+const mobile =
+    document.getElementById("mobileSearch");
 
 
-    if (document.activeElement === desktop) {
+if (document.activeElement === desktop) {
 
-        if (mobile) {
-            mobile.value = value;
-        }
-
+    if (mobile) {
+        mobile.value = value;
     }
-
-
-    if (document.activeElement === mobile) {
-
-        if (desktop) {
-            desktop.value = value;
-        }
-
-    }
-
 }
 
 
+if (document.activeElement === mobile) {
+
+    if (desktop) {
+        desktop.value = value;
+    }
+}
+
+}
+
 /* =========================================
-   CATEGORY FILTER
+CATEGORY FILTER
 ========================================= */
 
 function filterCategory(category) {
 
-    showPage("search");
+showPage("search");
 
-
-    const results =
-        products.filter(
-            product =>
-                product.category === category
-        );
-
-
-    renderSearchResults(results);
-
-
-    showToast(
-        `Showing ${category}`
+const results =
+    products.filter(
+        product =>
+            product.category === category
     );
+
+
+renderSearchResults(results);
+
+showToast(
+    `Showing ${category}`
+);
 
 }
 
-
 /* =========================================
-   SEARCH TABS
+SEARCH TABS
 ========================================= */
 
 function setSearchTab(button, type) {
 
-    document
-        .querySelectorAll(".search-tabs button")
-        .forEach(btn =>
-            btn.classList.remove("active")
+document
+    .querySelectorAll(".search-tabs button")
+    .forEach(btn =>
+        btn.classList.remove("active")
+    );
+
+
+button.classList.add("active");
+
+
+let results = products;
+
+
+if (type === "services") {
+
+    results =
+        products.filter(
+            p =>
+                p.category === "Services"
         );
-
-
-    button.classList.add("active");
-
-
-    let results = products;
-
-
-    if (type === "services") {
-
-        results =
-            products.filter(
-                p =>
-                    p.category === "Services"
-            );
-
-    }
-
-
-    if (type === "products") {
-
-        results =
-            products.filter(
-                p =>
-                    p.category !== "Services"
-            );
-
-    }
-
-
-    renderSearchResults(results);
-
 }
 
 
+if (type === "products") {
+
+    results =
+        products.filter(
+            p =>
+                p.category !== "Services"
+        );
+}
+
+
+renderSearchResults(results);
+
+}
+
 /* =========================================
-   OPEN PRODUCT
+OPEN PRODUCT
 ========================================= */
 
 function openProduct(id) {
 
-    const product =
-        products.find(
-            item => item.id === id
-        );
-
-    if (!product) return;
-
-
-    showToast(
-        `${product.name} selected`
+const product =
+    products.find(
+        item => item.id === id
     );
+
+if (!product) return;
+
+
+showToast(
+    `${product.name} selected`
+);
 
 }
 
-
 /* =========================================
-   CREATE DEMO LISTING
+CREATE DEMO LISTING
 ========================================= */
 
 function createDemoListing() {
 
-    const name =
-        document.getElementById(
-            "productName"
-        )?.value.trim();
+const name =
+    document
+        .getElementById("productName")
+        ?.value
+        .trim();
 
 
-    const price =
-        document.getElementById(
-            "productPrice"
-        )?.value;
+const price =
+    document
+        .getElementById("productPrice")
+        ?.value;
 
 
-    const category =
-        document.getElementById(
-            "productCategory"
-        )?.value;
+const category =
+    document
+        .getElementById("productCategory")
+        ?.value;
 
 
-    if (!name || !price) {
-
-        showToast(
-            "Please enter a product name and price."
-        );
-
-        return;
-
-    }
-
-
-    const newProduct = {
-
-        id: Date.now(),
-
-        name: name,
-
-        price: Number(price),
-
-        category: category,
-
-        seller: "You",
-
-        orders: 0,
-
-        rating: 0,
-
-        icon: "🛍️",
-
-        badge: null
-
-    };
-
-
-    products.unshift(newProduct);
-
-
-    const nameInput =
-        document.getElementById(
-            "productName"
-        );
-
-    const priceInput =
-        document.getElementById(
-            "productPrice"
-        );
-
-    const descriptionInput =
-        document.getElementById(
-            "productDescription"
-        );
-
-
-    if (nameInput) {
-        nameInput.value = "";
-    }
-
-
-    if (priceInput) {
-        priceInput.value = "";
-    }
-
-
-    if (descriptionInput) {
-        descriptionInput.value = "";
-    }
-
-
-    renderProducts();
-
+if (!name || !price) {
 
     showToast(
-        "Listing created in prototype."
+        "Please enter a product name and price."
     );
 
+    return;
 }
 
 
-/* =========================================
-   MIDMAN REQUEST
-========================================= */
+products.unshift({
 
-function requestMidman() {
+    id: Date.now(),
 
-    showToast(
-        "Midman request created."
-    );
+    name,
 
-}
+    price: Number(price),
 
+    category,
 
-/* =========================================
-   TOAST
-========================================= */
+    seller: "You",
 
-let toastTimer;
+    orders: 0,
 
+    rating: 0,
 
-function showToast(message) {
+    icon: "🛍️",
 
-    const toast =
-        document.getElementById("toast");
-
-    if (!toast) return;
-
-
-    const text =
-        toast.querySelector("p");
-
-    if (text) {
-        text.textContent = message;
-    }
-
-
-    toast.classList.add("show");
-
-
-    clearTimeout(toastTimer);
-
-
-    toastTimer =
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        }, 2500);
-
-}
-
-
-/* =========================================
-   SECURITY HELPER
-========================================= */
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-/* =========================================
-   INITIALIZE
-========================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        renderProducts();
-
-        renderSearchResults(products);
-
-    }
-);
-
-
-/* =========================================
-   FIREBASE AUTH STATE
-========================================= */
-
-watchAuth(async (user) => {
-
-    if (user) {
-
-        console.log(
-            "RPW user logged in:",
-            user.email
-        );
-
-
-        try {
-
-            const profile =
-                await getUserProfile(
-                    user.uid
-                );
-
-
-            if (profile) {
-
-                console.log(
-                    "RPW Profile:",
-                    profile
-                );
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Failed to load RPW profile:",
-                error
-            );
-
-        }
-
-    } else {
-
-        console.log(
-            "No RPW user logged in."
-        );
-
-    }
+    badge: null
 
 });
 
 
-/* =========================================
-   IMPORTANT
-   MODULE SCRIPTS DO NOT AUTOMATICALLY
-   CREATE GLOBAL FUNCTIONS.
+const nameInput =
+    document.getElementById("productName");
 
-   Your existing HTML uses onclick="..."
-   so we expose these functions globally.
+const priceInput =
+    document.getElementById("productPrice");
+
+const descriptionInput =
+    document.getElementById(
+        "productDescription"
+    );
+
+
+if (nameInput) {
+    nameInput.value = "";
+}
+
+if (priceInput) {
+    priceInput.value = "";
+}
+
+if (descriptionInput) {
+    descriptionInput.value = "";
+}
+
+
+renderProducts();
+
+showToast(
+    "Listing created in prototype."
+);
+
+}
+
+/* =========================================
+MIDMAN
 ========================================= */
 
-window.showPage =
-    showPage;
+function requestMidman() {
 
-window.searchProducts =
-    searchProducts;
+showToast(
+    "Midman request created."
+);
 
-window.filterCategory =
-    filterCategory;
-
-window.setSearchTab =
-    setSearchTab;
-
-window.openProduct =
-    openProduct;
-
-window.createDemoListing =
-    createDemoListing;
-
-window.requestMidman =
-    requestMidman;
-
-window.showToast =
-    showToast;
-
+}
 
 /* =========================================
-   OPTIONAL GLOBAL AUTH FUNCTIONS
-   We'll use these for the Login/Register
-   UI in the next step.
+TOAST
 ========================================= */
 
-window.RPWAuth = {
+let toastTimer;
 
-    register: registerUser,
+function showToast(message) {
 
-    login: loginUser,
+const toast =
+    document.getElementById("toast");
 
-    logout: logoutUser
+if (!toast) return;
 
-};
+
+const text =
+    toast.querySelector("p");
+
+
+if (text) {
+    text.textContent = message;
+}
+
+
+toast.classList.add("show");
+
+clearTimeout(toastTimer);
+
+
+toastTimer =
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 2500);
+
+}
 
 /* =========================================
-   RPW AUTHENTICATION UI
+SECURITY
+========================================= */
+
+function escapeHTML(value) {
+
+return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+/* =========================================
+GLOBAL FUNCTIONS
+========================================= */
+
+window.showPage = showPage;
+window.searchProducts = searchProducts;
+window.filterCategory = filterCategory;
+window.setSearchTab = setSearchTab;
+window.openProduct = openProduct;
+window.createDemoListing = createDemoListing;
+window.requestMidman = requestMidman;
+window.showToast = showToast;
+
+/* =========================================
+AUTH UI
 ========================================= */
 
 let currentRPWUser = null;
 
-
-/* =========================================
-   ELEMENTS
-========================================= */
+function initializeAuthUI() {
 
 const authScreen =
     document.getElementById("authScreen");
@@ -790,34 +631,39 @@ const authError =
     document.getElementById("authError");
 
 const profileSetupError =
-    document.getElementById(
-        "profileSetupError"
-    );
-
-const profilePictureInput =
-    document.getElementById(
-        "profilePictureInput"
-    );
-
-const profilePreview =
-    document.getElementById(
-        "profilePreview"
-    );
-
-const chooseProfilePicture =
-    document.getElementById(
-        "chooseProfilePicture"
-    );
+    document.getElementById("profileSetupError");
 
 const skipProfilePicture =
-    document.getElementById(
-        "skipProfilePicture"
+    document.getElementById("skipProfilePicture");
+
+
+/* -----------------------------------------
+   CHECK REQUIRED ELEMENTS
+----------------------------------------- */
+
+if (
+    !authScreen ||
+    !profileSetup ||
+    !loginForm ||
+    !registerForm ||
+    !authTitle ||
+    !authSubtitle ||
+    !authSwitchText ||
+    !authSwitchButton ||
+    !authError
+) {
+
+    console.error(
+        "RPW AUTH ERROR: Authentication HTML elements are missing."
     );
 
+    return;
+}
 
-/* =========================================
+
+/* -----------------------------------------
    AUTH MODE
-========================================= */
+----------------------------------------- */
 
 let authMode = "login";
 
@@ -868,9 +714,7 @@ function setAuthMode(mode) {
 
         authSwitchButton.textContent =
             "Create Account";
-
     }
-
 }
 
 
@@ -888,13 +732,13 @@ authSwitchButton.addEventListener(
 );
 
 
-/* =========================================
+/* -----------------------------------------
    LOGIN
-========================================= */
+----------------------------------------- */
 
 loginForm.addEventListener(
     "submit",
-    async (event) => {
+    async event => {
 
         event.preventDefault();
 
@@ -905,13 +749,23 @@ loginForm.addEventListener(
         const email =
             document
                 .getElementById("loginEmail")
-                .value
+                ?.value
                 .trim();
+
 
         const password =
             document
                 .getElementById("loginPassword")
-                .value;
+                ?.value;
+
+
+        if (!email || !password) {
+
+            authError.textContent =
+                "Please enter your email and password.";
+
+            return;
+        }
 
 
         try {
@@ -925,24 +779,25 @@ loginForm.addEventListener(
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "RPW LOGIN ERROR:",
+                error
+            );
 
             authError.textContent =
                 getAuthErrorMessage(error);
-
         }
-
     }
 );
 
 
-/* =========================================
+/* -----------------------------------------
    REGISTER
-========================================= */
+----------------------------------------- */
 
 registerForm.addEventListener(
     "submit",
-    async (event) => {
+    async event => {
 
         event.preventDefault();
 
@@ -955,32 +810,51 @@ registerForm.addEventListener(
                 .getElementById(
                     "registerUsername"
                 )
-                .value
+                ?.value
                 .trim();
+
 
         const email =
             document
                 .getElementById(
                     "registerEmail"
                 )
-                .value
+                ?.value
                 .trim();
+
 
         const password =
             document
                 .getElementById(
                     "registerPassword"
                 )
-                .value;
+                ?.value;
 
 
-        if (username.length < 3) {
+        if (!username || username.length < 3) {
 
             authError.textContent =
                 "Username must be at least 3 characters.";
 
             return;
+        }
 
+
+        if (!email) {
+
+            authError.textContent =
+                "Please enter your email.";
+
+            return;
+        }
+
+
+        if (!password || password.length < 6) {
+
+            authError.textContent =
+                "Password must be at least 6 characters.";
+
+            return;
         }
 
 
@@ -996,324 +870,255 @@ registerForm.addEventListener(
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "RPW REGISTER ERROR:",
+                error
+            );
 
             authError.textContent =
                 getAuthErrorMessage(error);
-
         }
-
     }
 );
 
 
-/* =========================================
-   PROFILE PICTURE PICKER
-========================================= */
-
-chooseProfilePicture.addEventListener(
-    "click",
-    () => {
-
-        profilePictureInput.click();
-
-    }
-);
-
-
-/* =========================================
-   PREVIEW
-========================================= */
-
-profilePictureInput.addEventListener(
-    "change",
-    () => {
-
-        const file =
-            profilePictureInput.files[0];
-
-        if (!file) return;
-
-
-        if (!file.type.startsWith("image/")) {
-
-            profileSetupError.textContent =
-                "Please choose an image.";
-
-            return;
-
-        }
-
-
-        if (file.size > 5 * 1024 * 1024) {
-
-            profileSetupError.textContent =
-                "Image must be 5MB or smaller.";
-
-            return;
-
-        }
-
-
-        profileSetupError.textContent = "";
-
-
-        const reader =
-            new FileReader();
-
-
-        reader.onload =
-            (event) => {
-
-                profilePreview.innerHTML = `
-                    <img
-                        src="${event.target.result}"
-                        alt="Profile preview"
-                    >
-                `;
-
-            };
-
-
-        reader.readAsDataURL(file);
-
-    }
-);
-
-
-/* =========================================
-   SAVE PROFILE PICTURE
-========================================= */
-
-profilePictureInput.addEventListener(
-    "change",
-    async () => {
-
-        const file =
-            profilePictureInput.files[0];
-
-        if (!file) return;
-
-        if (!currentRPWUser) return;
-
-
-        chooseProfilePicture.disabled =
-            true;
-
-        chooseProfilePicture.textContent =
-            "Uploading...";
-
-
-        try {
-
-            await uploadProfilePicture(
-                currentRPWUser.uid,
-                file
-            );
-
-
-            profileSetup.classList.add(
-                "hidden"
-            );
-
-            authScreen.classList.add(
-                "hidden"
-            );
-
-            showPage("home");
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            profileSetupError.textContent =
-                error.message ||
-                "Upload failed.";
-
-            chooseProfilePicture.disabled =
-                false;
-
-            chooseProfilePicture.textContent =
-                "Choose Profile Picture";
-
-        }
-
-    }
-);
-
-
-/* =========================================
+/* -----------------------------------------
    SKIP PROFILE PICTURE
-========================================= */
+----------------------------------------- */
 
-skipProfilePicture.addEventListener(
-    "click",
-    async () => {
+if (skipProfilePicture) {
 
-        if (!currentRPWUser) return;
+    skipProfilePicture.addEventListener(
+        "click",
+        async () => {
 
+            if (!currentRPWUser) return;
 
-        skipProfilePicture.disabled =
-            true;
-
-        skipProfilePicture.textContent =
-            "Setting up...";
-
-
-        try {
-
-            await completeProfileWithoutPhoto(
-                currentRPWUser.uid
-            );
-
-
-            profileSetup.classList.add(
-                "hidden"
-            );
-
-            authScreen.classList.add(
-                "hidden"
-            );
-
-            showPage("home");
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            profileSetupError.textContent =
-                "Something went wrong. Please try again.";
 
             skipProfilePicture.disabled =
-                false;
+                true;
 
             skipProfilePicture.textContent =
-                "Skip for now";
-
-        }
-
-    }
-);
+                "Setting up...";
 
 
-/* =========================================
-   AUTH STATE
-========================================= */
+            try {
 
-watchAuth(
-    async (user) => {
-
-        currentRPWUser = user;
-
-
-        /* No account */
-
-        if (!user) {
-
-            authScreen.classList.remove(
-                "hidden"
-            );
-
-            profileSetup.classList.add(
-                "hidden"
-            );
-
-            setAuthMode("login");
-
-            return;
-
-        }
-
-
-        /* User exists */
-
-        try {
-
-            const profile =
-                await getUserProfile(
-                    user.uid
+                await completeProfileWithoutPhoto(
+                    currentRPWUser.uid
                 );
 
-
-            if (
-                profile &&
-                profile.profileCompleted
-            ) {
-
-                /* Existing completed user */
-
-                authScreen.classList.add(
-                    "hidden"
-                );
 
                 profileSetup.classList.add(
                     "hidden"
                 );
 
-                showPage("home");
-
-            } else {
-
-                /* New user */
-
                 authScreen.classList.add(
                     "hidden"
                 );
 
-                profileSetup.classList.remove(
-                    "hidden"
+                showPage("home");
+
+
+            } catch (error) {
+
+                console.error(
+                    "RPW PROFILE ERROR:",
+                    error
                 );
 
+
+                if (profileSetupError) {
+
+                    profileSetupError.textContent =
+                        "Something went wrong. Please try again.";
+                }
+
+
+                skipProfilePicture.disabled =
+                    false;
+
+                skipProfilePicture.textContent =
+                    "Skip for now";
             }
-
-
-        } catch (error) {
-
-            console.error(
-                "Profile loading error:",
-                error
-            );
-
         }
+    );
+}
 
-    }
-);
 
+/* -----------------------------------------
+   INITIAL MODE
+----------------------------------------- */
+
+setAuthMode("login");
+
+}
 
 /* =========================================
-   FIREBASE ERROR TRANSLATOR
+AUTH STATE
+========================================= */
+
+watchAuth(
+async user => {
+
+    currentRPWUser = user;
+
+
+    const authScreen =
+        document.getElementById("authScreen");
+
+    const profileSetup =
+        document.getElementById("profileSetup");
+
+
+    if (!authScreen || !profileSetup) {
+
+        console.error(
+            "RPW AUTH ERROR: authScreen/profileSetup missing."
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       NOT LOGGED IN
+    ----------------------------------------- */
+
+    if (!user) {
+
+        authScreen.classList.remove(
+            "hidden"
+        );
+
+        profileSetup.classList.add(
+            "hidden"
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       LOGGED IN
+    ----------------------------------------- */
+
+    try {
+
+        const profile =
+            await getUserProfile(
+                user.uid
+            );
+
+
+        if (
+            profile &&
+            profile.profileCompleted === true
+        ) {
+
+            authScreen.classList.add(
+                "hidden"
+            );
+
+            profileSetup.classList.add(
+                "hidden"
+            );
+
+            showPage("home");
+
+        } else {
+
+            authScreen.classList.add(
+                "hidden"
+            );
+
+            profileSetup.classList.remove(
+                "hidden"
+            );
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "RPW PROFILE LOAD ERROR:",
+            error
+        );
+
+        authScreen.classList.remove(
+            "hidden"
+        );
+
+        profileSetup.classList.add(
+            "hidden"
+        );
+    }
+}
+
+);
+
+/* =========================================
+DOM READY
+========================================= */
+
+document.addEventListener(
+"DOMContentLoaded",
+() => {
+
+    renderProducts();
+
+    renderSearchResults(products);
+
+    initializeAuthUI();
+
+}
+
+);
+
+/* =========================================
+ERROR TRANSLATOR
 ========================================= */
 
 function getAuthErrorMessage(error) {
 
-    switch (error.code) {
+switch (error.code) {
 
-        case "auth/email-already-in-use":
-            return "That email is already registered.";
+    case "auth/email-already-in-use":
+        return "That email is already registered.";
 
-        case "auth/invalid-email":
-            return "Please enter a valid email.";
+    case "auth/invalid-email":
+        return "Please enter a valid email.";
 
-        case "auth/weak-password":
-            return "Password must be at least 6 characters.";
+    case "auth/weak-password":
+        return "Password must be at least 6 characters.";
 
-        case "auth/invalid-credential":
-            return "Incorrect email or password.";
+    case "auth/invalid-credential":
+        return "Incorrect email or password.";
 
-        case "auth/user-not-found":
-            return "No account was found with that email.";
+    case "auth/user-not-found":
+        return "No account was found with that email.";
 
-        case "auth/wrong-password":
-            return "Incorrect email or password.";
+    case "auth/wrong-password":
+        return "Incorrect email or password.";
 
-        case "auth/too-many-requests":
-            return "Too many attempts. Please try again later.";
+    case "auth/too-many-requests":
+        return "Too many attempts. Please try again later.";
 
-        default:
-            return "Something went wrong. Please try again.";
+    case "auth/network-request-failed":
+        return "Network error. Please check your internet connection.";
 
-    }
+    case "permission-denied":
+        return "Firebase permission denied. Check Firestore rules.";
+
+    default:
+
+        console.error(
+            "Unhandled Firebase error:",
+            error
+        );
+
+        return error.message ||
+            "Something went wrong. Please try again.";
+}
 
 }
