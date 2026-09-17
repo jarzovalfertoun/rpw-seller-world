@@ -25,6 +25,221 @@
 <body>
 
     <!-- =========================
+     AUTH SCREEN
+========================== -->
+
+<div id="authScreen" class="auth-screen">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            RPW
+        </div>
+
+        <h1 id="authTitle">
+            Welcome to Seller World
+        </h1>
+
+        <p id="authSubtitle">
+            Create your account and start trading.
+        </p>
+
+
+        <!-- LOGIN -->
+
+        <form id="loginForm" class="auth-form">
+
+            <label>
+                Email
+
+                <input
+                    id="loginEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required
+                >
+
+            </label>
+
+
+            <label>
+                Password
+
+                <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="primary-button full"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <!-- REGISTER -->
+
+        <form
+            id="registerForm"
+            class="auth-form hidden"
+        >
+
+            <label>
+                Username
+
+                <input
+                    id="registerUsername"
+                    type="text"
+                    placeholder="Choose a username"
+                    maxlength="30"
+                    required
+                >
+
+            </label>
+
+
+            <label>
+                Email
+
+                <input
+                    id="registerEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required
+                >
+
+            </label>
+
+
+            <label>
+                Password
+
+                <input
+                    id="registerPassword"
+                    type="password"
+                    placeholder="At least 6 characters"
+                    minlength="6"
+                    autocomplete="new-password"
+                    required
+                >
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="primary-button full"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <p
+            id="authError"
+            class="auth-error"
+        ></p>
+
+
+        <div class="auth-switch">
+
+            <span id="authSwitchText">
+                Don't have an account?
+            </span>
+
+            <button
+                type="button"
+                id="authSwitchButton"
+            >
+                Create Account
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PROFILE SETUP
+========================== -->
+
+<div
+    id="profileSetup"
+    class="profile-setup hidden"
+>
+
+    <div class="profile-setup-card">
+
+        <div class="setup-logo">
+            RPW
+        </div>
+
+        <h1>Complete your profile</h1>
+
+        <p>
+            Add a profile picture so people can recognize you.
+            You can also skip this for now.
+        </p>
+
+
+        <div
+            id="profilePreview"
+            class="profile-picture-preview"
+        >
+            <span>👤</span>
+        </div>
+
+
+        <input
+            id="profilePictureInput"
+            type="file"
+            accept="image/*"
+            hidden
+        >
+
+
+        <button
+            type="button"
+            class="primary-button full"
+            id="chooseProfilePicture"
+        >
+            Choose Profile Picture
+        </button>
+
+
+        <button
+            type="button"
+            class="skip-button"
+            id="skipProfilePicture"
+        >
+            Skip for now
+        </button>
+
+
+        <p
+            id="profileSetupError"
+            class="auth-error"
+        ></p>
+
+    </div>
+
+    </div>
+
+    <!-- =========================
          APP HEADER
     ========================== -->
 
