@@ -1,3 +1,11 @@
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  watchAuth,
+  getUserProfile
+} from "./firebase.js";
+
 /* =========================================
    RPW: SELLER WORLD
    FRONTEND PROTOTYPE
@@ -613,3 +621,35 @@ document.addEventListener(
 
     }
 );
+
+// ==========================================
+// RPW AUTH STATE
+// ==========================================
+
+watchAuth(async (user) => {
+
+  if (user) {
+
+    console.log("RPW user logged in:", user.email);
+
+    const profile = await getUserProfile(user.uid);
+
+    if (profile) {
+
+      console.log("RPW Profile:", profile);
+
+      // Update your existing profile UI here later.
+      // Example:
+      //
+      // document.querySelector(".profile-name").textContent =
+      //   profile.username;
+
+    }
+
+  } else {
+
+    console.log("No RPW user logged in.");
+
+  }
+
+});
