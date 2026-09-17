@@ -16,16 +16,17 @@ DEMO PRODUCTS
 ========================================= */
 
 let products = [
+
 {
-id: 1,
-name: "Premium Digital Service",
-price: 150,
-category: "Services",
-seller: "Alex Digital",
-orders: 27,
-rating: 4.9,
-icon: "⚡",
-badge: "verified"
+    id: 1,
+    name: "Premium Digital Service",
+    price: 150,
+    category: "Services",
+    seller: "Alex Digital",
+    orders: 27,
+    rating: 4.9,
+    icon: "⚡",
+    badge: "verified"
 },
 
 {
@@ -106,8 +107,11 @@ document
 const selectedPage =
     document.getElementById(pageId);
 
+
 if (selectedPage) {
+
     selectedPage.classList.add("active");
+
 }
 
 
@@ -118,7 +122,9 @@ document
         item.classList.remove("active");
 
         if (item.dataset.page === pageId) {
+
             item.classList.add("active");
+
         }
 
     });
@@ -131,18 +137,21 @@ window.scrollTo({
 
 
 if (pageId === "search") {
+
     renderSearchResults(products);
+
 }
 
 }
 
 /* =========================================
-BADGE
+BADGES
 ========================================= */
 
 function getBadge(orders) {
 
 if (orders >= 50) {
+
     return `
         <span
             class="rainbow-badge"
@@ -151,10 +160,12 @@ if (orders >= 50) {
             ★
         </span>
     `;
+
 }
 
 
 if (orders >= 10) {
+
     return `
         <span
             class="verified-badge"
@@ -163,6 +174,7 @@ if (orders >= 10) {
             ✓
         </span>
     `;
+
 }
 
 
@@ -177,42 +189,62 @@ PRODUCT CARD
 function createProductCard(product) {
 
 return `
+
     <article
         class="product-card"
         onclick="openProduct(${product.id})"
     >
 
         <div class="product-image">
-            <span>${product.icon}</span>
+
+            <span>
+                ${product.icon}
+            </span>
+
         </div>
+
 
         <div class="product-body">
 
             <div class="product-title">
+
                 ${escapeHTML(product.name)}
+
             </div>
 
+
             <div class="product-price">
+
                 ₱${Number(product.price).toLocaleString()}
+
             </div>
+
 
             <div class="product-seller">
 
                 <small>
+
                     ${escapeHTML(product.seller)}
+
                     ${getBadge(product.orders)}
+
                 </small>
 
             </div>
 
+
             <div class="product-rating">
+
                 ★ ${product.rating}
+
                 · ${product.orders} orders
+
             </div>
 
         </div>
 
     </article>
+
 `;
 
 }
@@ -224,9 +256,13 @@ RENDER PRODUCTS
 function renderProducts() {
 
 const container =
-    document.getElementById("homeProducts");
+    document.getElementById(
+        "homeProducts"
+    );
+
 
 if (!container) return;
+
 
 container.innerHTML =
     products
@@ -243,7 +279,10 @@ SEARCH RESULTS
 function renderSearchResults(list) {
 
 const container =
-    document.getElementById("searchResults");
+    document.getElementById(
+        "searchResults"
+    );
+
 
 if (!container) return;
 
@@ -251,6 +290,7 @@ if (!container) return;
 if (list.length === 0) {
 
     container.innerHTML = `
+
         <div
             style="
                 grid-column:1/-1;
@@ -259,17 +299,21 @@ if (list.length === 0) {
                 color:#718096;
             "
         >
+
             <div style="font-size:40px;">
                 🔎
             </div>
 
-            <p style="margin-top:10px;">
+            <p>
                 No listings found.
             </p>
+
         </div>
+
     `;
 
     return;
+
 }
 
 
@@ -287,13 +331,16 @@ SEARCH
 function searchProducts(value) {
 
 const query =
-    value.trim().toLowerCase();
+    value
+        .trim()
+        .toLowerCase();
 
 
 const results =
     products.filter(product => {
 
         return (
+
             product.name
                 .toLowerCase()
                 .includes(query)
@@ -309,6 +356,7 @@ const results =
             product.seller
                 .toLowerCase()
                 .includes(query)
+
         );
 
     });
@@ -318,25 +366,34 @@ renderSearchResults(results);
 
 
 const desktop =
-    document.getElementById("desktopSearch");
+    document.getElementById(
+        "desktopSearch"
+    );
+
 
 const mobile =
-    document.getElementById("mobileSearch");
+    document.getElementById(
+        "mobileSearch"
+    );
 
 
-if (document.activeElement === desktop) {
+if (
+    document.activeElement === desktop &&
+    mobile
+) {
 
-    if (mobile) {
-        mobile.value = value;
-    }
+    mobile.value = value;
+
 }
 
 
-if (document.activeElement === mobile) {
+if (
+    document.activeElement === mobile &&
+    desktop
+) {
 
-    if (desktop) {
-        desktop.value = value;
-    }
+    desktop.value = value;
+
 }
 
 }
@@ -349,6 +406,7 @@ function filterCategory(category) {
 
 showPage("search");
 
+
 const results =
     products.filter(
         product =>
@@ -357,6 +415,7 @@ const results =
 
 
 renderSearchResults(results);
+
 
 showToast(
     `Showing ${category}`
@@ -372,9 +431,11 @@ function setSearchTab(button, type) {
 
 document
     .querySelectorAll(".search-tabs button")
-    .forEach(btn =>
-        btn.classList.remove("active")
-    );
+    .forEach(btn => {
+
+        btn.classList.remove("active");
+
+    });
 
 
 button.classList.add("active");
@@ -390,6 +451,7 @@ if (type === "services") {
             p =>
                 p.category === "Services"
         );
+
 }
 
 
@@ -400,6 +462,7 @@ if (type === "products") {
             p =>
                 p.category !== "Services"
         );
+
 }
 
 
@@ -415,8 +478,10 @@ function openProduct(id) {
 
 const product =
     products.find(
-        item => item.id === id
+        item =>
+            item.id === id
     );
+
 
 if (!product) return;
 
@@ -428,27 +493,33 @@ showToast(
 }
 
 /* =========================================
-CREATE DEMO LISTING
+CREATE LISTING
 ========================================= */
 
 function createDemoListing() {
 
 const name =
     document
-        .getElementById("productName")
+        .getElementById(
+            "productName"
+        )
         ?.value
         .trim();
 
 
 const price =
     document
-        .getElementById("productPrice")
+        .getElementById(
+            "productPrice"
+        )
         ?.value;
 
 
 const category =
     document
-        .getElementById("productCategory")
+        .getElementById(
+            "productCategory"
+        )
         ?.value;
 
 
@@ -459,6 +530,7 @@ if (!name || !price) {
     );
 
     return;
+
 }
 
 
@@ -466,11 +538,11 @@ products.unshift({
 
     id: Date.now(),
 
-    name,
+    name: name,
 
     price: Number(price),
 
-    category,
+    category: category,
 
     seller: "You",
 
@@ -485,32 +557,23 @@ products.unshift({
 });
 
 
-const nameInput =
-    document.getElementById("productName");
-
-const priceInput =
-    document.getElementById("productPrice");
-
-const descriptionInput =
-    document.getElementById(
-        "productDescription"
-    );
+document.getElementById(
+    "productName"
+).value = "";
 
 
-if (nameInput) {
-    nameInput.value = "";
-}
+document.getElementById(
+    "productPrice"
+).value = "";
 
-if (priceInput) {
-    priceInput.value = "";
-}
 
-if (descriptionInput) {
-    descriptionInput.value = "";
-}
+document.getElementById(
+    "productDescription"
+).value = "";
 
 
 renderProducts();
+
 
 showToast(
     "Listing created in prototype."
@@ -539,7 +602,10 @@ let toastTimer;
 function showToast(message) {
 
 const toast =
-    document.getElementById("toast");
+    document.getElementById(
+        "toast"
+    );
+
 
 if (!toast) return;
 
@@ -549,11 +615,14 @@ const text =
 
 
 if (text) {
+
     text.textContent = message;
+
 }
 
 
 toast.classList.add("show");
+
 
 clearTimeout(toastTimer);
 
@@ -561,14 +630,16 @@ clearTimeout(toastTimer);
 toastTimer =
     setTimeout(() => {
 
-        toast.classList.remove("show");
+        toast.classList.remove(
+            "show"
+        );
 
     }, 2500);
 
 }
 
 /* =========================================
-SECURITY
+ESCAPE HTML
 ========================================= */
 
 function escapeHTML(value) {
@@ -596,7 +667,7 @@ window.requestMidman = requestMidman;
 window.showToast = showToast;
 
 /* =========================================
-AUTH UI
+AUTH SYSTEM
 ========================================= */
 
 let currentRPWUser = null;
@@ -604,42 +675,60 @@ let currentRPWUser = null;
 function initializeAuthUI() {
 
 const authScreen =
-    document.getElementById("authScreen");
+    document.getElementById(
+        "authScreen"
+    );
 
 const profileSetup =
-    document.getElementById("profileSetup");
+    document.getElementById(
+        "profileSetup"
+    );
 
 const loginForm =
-    document.getElementById("loginForm");
+    document.getElementById(
+        "loginForm"
+    );
 
 const registerForm =
-    document.getElementById("registerForm");
+    document.getElementById(
+        "registerForm"
+    );
 
 const authTitle =
-    document.getElementById("authTitle");
+    document.getElementById(
+        "authTitle"
+    );
 
 const authSubtitle =
-    document.getElementById("authSubtitle");
+    document.getElementById(
+        "authSubtitle"
+    );
 
 const authSwitchText =
-    document.getElementById("authSwitchText");
+    document.getElementById(
+        "authSwitchText"
+    );
 
 const authSwitchButton =
-    document.getElementById("authSwitchButton");
+    document.getElementById(
+        "authSwitchButton"
+    );
 
 const authError =
-    document.getElementById("authError");
+    document.getElementById(
+        "authError"
+    );
 
 const profileSetupError =
-    document.getElementById("profileSetupError");
+    document.getElementById(
+        "profileSetupError"
+    );
 
 const skipProfilePicture =
-    document.getElementById("skipProfilePicture");
+    document.getElementById(
+        "skipProfilePicture"
+    );
 
-
-/* -----------------------------------------
-   CHECK REQUIRED ELEMENTS
------------------------------------------ */
 
 if (
     !authScreen ||
@@ -654,19 +743,20 @@ if (
 ) {
 
     console.error(
-        "RPW AUTH ERROR: Authentication HTML elements are missing."
+        "RPW: Authentication HTML is incomplete."
     );
 
     return;
+
 }
 
 
-/* -----------------------------------------
-   AUTH MODE
------------------------------------------ */
-
 let authMode = "login";
 
+
+/* -----------------------------------------
+   CHANGE LOGIN / REGISTER
+----------------------------------------- */
 
 function setAuthMode(mode) {
 
@@ -697,7 +787,9 @@ function setAuthMode(mode) {
 
     } else {
 
-        registerForm.classList.add("hidden");
+        registerForm.classList.add(
+            "hidden"
+        );
 
         loginForm.classList.remove(
             "hidden"
@@ -714,7 +806,9 @@ function setAuthMode(mode) {
 
         authSwitchButton.textContent =
             "Create Account";
+
     }
+
 }
 
 
@@ -742,20 +836,21 @@ loginForm.addEventListener(
 
         event.preventDefault();
 
-        authError.textContent =
-            "Logging in...";
-
 
         const email =
             document
-                .getElementById("loginEmail")
+                .getElementById(
+                    "loginEmail"
+                )
                 ?.value
                 .trim();
 
 
         const password =
             document
-                .getElementById("loginPassword")
+                .getElementById(
+                    "loginPassword"
+                )
                 ?.value;
 
 
@@ -765,7 +860,12 @@ loginForm.addEventListener(
                 "Please enter your email and password.";
 
             return;
+
         }
+
+
+        authError.textContent =
+            "Logging in...";
 
 
         try {
@@ -775,7 +875,8 @@ loginForm.addEventListener(
                 password
             );
 
-            authError.textContent = "";
+            authError.textContent =
+                "Login successful!";
 
         } catch (error) {
 
@@ -785,8 +886,12 @@ loginForm.addEventListener(
             );
 
             authError.textContent =
-                getAuthErrorMessage(error);
+                getAuthErrorMessage(
+                    error
+                );
+
         }
+
     }
 );
 
@@ -800,9 +905,6 @@ registerForm.addEventListener(
     async event => {
 
         event.preventDefault();
-
-        authError.textContent =
-            "Creating your account...";
 
 
         const username =
@@ -831,12 +933,16 @@ registerForm.addEventListener(
                 ?.value;
 
 
-        if (!username || username.length < 3) {
+        if (
+            !username ||
+            username.length < 3
+        ) {
 
             authError.textContent =
                 "Username must be at least 3 characters.";
 
             return;
+
         }
 
 
@@ -846,16 +952,25 @@ registerForm.addEventListener(
                 "Please enter your email.";
 
             return;
+
         }
 
 
-        if (!password || password.length < 6) {
+        if (
+            !password ||
+            password.length < 6
+        ) {
 
             authError.textContent =
                 "Password must be at least 6 characters.";
 
             return;
+
         }
+
+
+        authError.textContent =
+            "Creating your account...";
 
 
         try {
@@ -866,7 +981,8 @@ registerForm.addEventListener(
                 username
             );
 
-            authError.textContent = "";
+            authError.textContent =
+                "";
 
         } catch (error) {
 
@@ -876,8 +992,12 @@ registerForm.addEventListener(
             );
 
             authError.textContent =
-                getAuthErrorMessage(error);
+                getAuthErrorMessage(
+                    error
+                );
+
         }
+
     }
 );
 
@@ -892,7 +1012,11 @@ if (skipProfilePicture) {
         "click",
         async () => {
 
-            if (!currentRPWUser) return;
+            if (!currentRPWUser) {
+
+                return;
+
+            }
 
 
             skipProfilePicture.disabled =
@@ -932,6 +1056,7 @@ if (skipProfilePicture) {
 
                     profileSetupError.textContent =
                         "Something went wrong. Please try again.";
+
                 }
 
 
@@ -940,15 +1065,14 @@ if (skipProfilePicture) {
 
                 skipProfilePicture.textContent =
                     "Skip for now";
+
             }
+
         }
     );
+
 }
 
-
-/* -----------------------------------------
-   INITIAL MODE
------------------------------------------ */
 
 setAuthMode("login");
 
@@ -965,25 +1089,25 @@ async user => {
 
 
     const authScreen =
-        document.getElementById("authScreen");
-
-    const profileSetup =
-        document.getElementById("profileSetup");
-
-
-    if (!authScreen || !profileSetup) {
-
-        console.error(
-            "RPW AUTH ERROR: authScreen/profileSetup missing."
+        document.getElementById(
+            "authScreen"
         );
 
+    const profileSetup =
+        document.getElementById(
+            "profileSetup"
+        );
+
+
+    if (
+        !authScreen ||
+        !profileSetup
+    ) {
+
         return;
+
     }
 
-
-    /* -----------------------------------------
-       NOT LOGGED IN
-    ----------------------------------------- */
 
     if (!user) {
 
@@ -996,12 +1120,9 @@ async user => {
         );
 
         return;
+
     }
 
-
-    /* -----------------------------------------
-       LOGGED IN
-    ----------------------------------------- */
 
     try {
 
@@ -1035,6 +1156,7 @@ async user => {
             profileSetup.classList.remove(
                 "hidden"
             );
+
         }
 
 
@@ -1045,14 +1167,8 @@ async user => {
             error
         );
 
-        authScreen.classList.remove(
-            "hidden"
-        );
-
-        profileSetup.classList.add(
-            "hidden"
-        );
     }
+
 }
 
 );
@@ -1067,7 +1183,9 @@ document.addEventListener(
 
     renderProducts();
 
-    renderSearchResults(products);
+    renderSearchResults(
+        products
+    );
 
     initializeAuthUI();
 
@@ -1076,7 +1194,7 @@ document.addEventListener(
 );
 
 /* =========================================
-ERROR TRANSLATOR
+FIREBASE ERROR TRANSLATOR
 ========================================= */
 
 function getAuthErrorMessage(error) {
@@ -1084,41 +1202,62 @@ function getAuthErrorMessage(error) {
 switch (error.code) {
 
     case "auth/email-already-in-use":
+
         return "That email is already registered.";
 
+
     case "auth/invalid-email":
+
         return "Please enter a valid email.";
 
+
     case "auth/weak-password":
+
         return "Password must be at least 6 characters.";
 
+
     case "auth/invalid-credential":
+
         return "Incorrect email or password.";
+
 
     case "auth/user-not-found":
+
         return "No account was found with that email.";
 
+
     case "auth/wrong-password":
+
         return "Incorrect email or password.";
 
+
     case "auth/too-many-requests":
+
         return "Too many attempts. Please try again later.";
 
+
     case "auth/network-request-failed":
-        return "Network error. Please check your internet connection.";
+
+        return "Network error. Check your internet connection.";
+
 
     case "permission-denied":
+
         return "Firebase permission denied. Check Firestore rules.";
+
 
     default:
 
         console.error(
-            "Unhandled Firebase error:",
+            "Unhandled RPW Firebase error:",
             error
         );
 
-        return error.message ||
-            "Something went wrong. Please try again.";
+        return (
+            error.message ||
+            "Something went wrong. Please try again."
+        );
+
 }
 
 }
