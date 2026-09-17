@@ -1,155 +1,308 @@
-// RPW: Seller World
-// Firebase connection
-
 import { initializeApp } from
-  "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 import {
-  getAuth,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut
+    getAuth,
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut
 } from
-  "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+    "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  serverTimestamp
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    updateDoc,
+    serverTimestamp
 } from
-  "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+    "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+} from
+    "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
 
 
-// ==========================================
-// YOUR FIREBASE CONFIG
-// ==========================================
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCf1_ldd1PxAPgcRH_vd6L5oXXtrRSMjpk",
-  authDomain: "rpw-seller-world-ccb3a.firebaseapp.com",
-  projectId: "rpw-seller-world-ccb3a",
-  storageBucket: "rpw-seller-world-ccb3a.firebasestorage.app",
-  messagingSenderId: "645033393554",
-  appId: "1:645033393554:web:30a2a7fa26ada1ab26d54b"
+
+    apiKey: "PASTE_YOUR_API_KEY",
+
+    authDomain: "PASTE_YOUR_AUTH_DOMAIN",
+
+    projectId: "PASTE_YOUR_PROJECT_ID",
+
+    storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
+
+    messagingSenderId:
+        "PASTE_YOUR_MESSAGING_SENDER_ID",
+
+    appId: "PASTE_YOUR_APP_ID"
+
 };
 
 
-// ==========================================
-// INITIALIZE FIREBASE
-// ==========================================
+/* =========================================
+   INITIALIZE
+========================================= */
 
-const app = initializeApp(firebaseConfig);
+const app =
+    initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+const auth =
+    getAuth(app);
+
+const db =
+    getFirestore(app);
+
+const storage =
+    getStorage(app);
 
 
-// ==========================================
-// CREATE ACCOUNT
-// ==========================================
+/* =========================================
+   REGISTER
+========================================= */
 
-export async function registerUser(email, password, username) {
-
-  const result = await createUserWithEmailAndPassword(
-    auth,
+export async function registerUser(
     email,
-    password
-  );
+    password,
+    username
+) {
 
-  const user = result.user;
+    const result =
+        await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
 
-  await setDoc(doc(db, "users", user.uid), {
+    const user =
+        result.user;
 
-    uid: user.uid,
 
-    username: username,
+    await setDoc(
+        doc(db, "users", user.uid),
+        {
 
-    email: email,
+            uid: user.uid,
 
-    completedOrders: 0,
+            username: username,
 
-    sellerRating: 0,
+            email: email,
 
-    sellerReviews: 0,
+            photoURL: "",
 
-    isVerified: false,
+            profileCompleted: false,
 
-    badge: "none",
+            completedOrders: 0,
 
-    role: "user",
+            sellerRating: 0,
 
-    createdAt: serverTimestamp()
+            sellerReviews: 0,
 
-  });
+            isVerified: false,
 
-  return user;
+            badge: "none",
+
+            role: "user",
+
+            createdAt:
+                serverTimestamp()
+
+        }
+    );
+
+
+    return user;
+
 }
 
 
-// ==========================================
-// LOGIN
-// ==========================================
+/* =========================================
+   LOGIN
+========================================= */
 
-export async function loginUser(email, password) {
-
-  const result = await signInWithEmailAndPassword(
-    auth,
+export async function loginUser(
     email,
     password
-  );
+) {
 
-  return result.user;
+    const result =
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+    return result.user;
+
 }
 
 
-// ==========================================
-// LOGOUT
-// ==========================================
+/* =========================================
+   LOGOUT
+========================================= */
 
 export async function logoutUser() {
 
-  await signOut(auth);
+    await signOut(auth);
 
 }
 
 
-// ==========================================
-// GET CURRENT USER
-// ==========================================
+/* =========================================
+   AUTH STATE
+========================================= */
 
 export function watchAuth(callback) {
 
-  return onAuthStateChanged(auth, callback);
+    return onAuthStateChanged(
+        auth,
+        callback
+    );
 
 }
 
 
-// ==========================================
-// GET USER PROFILE
-// ==========================================
+/* =========================================
+   GET PROFILE
+========================================= */
 
 export async function getUserProfile(uid) {
 
-  const snapshot = await getDoc(
-    doc(db, "users", uid)
-  );
+    const snapshot =
+        await getDoc(
+            doc(db, "users", uid)
+        );
 
-  if (!snapshot.exists()) {
-    return null;
-  }
 
-  return snapshot.data();
+    if (!snapshot.exists()) {
+        return null;
+    }
+
+
+    return snapshot.data();
+
 }
 
 
-// ==========================================
-// EXPORT FIREBASE SERVICES
-// ==========================================
+/* =========================================
+   UPLOAD PROFILE PICTURE
+========================================= */
+
+export async function uploadProfilePicture(
+    uid,
+    file
+) {
+
+    if (!file) {
+        throw new Error(
+            "No profile picture selected."
+        );
+    }
+
+
+    if (!file.type.startsWith("image/")) {
+
+        throw new Error(
+            "Please select an image."
+        );
+
+    }
+
+
+    if (file.size > 5 * 1024 * 1024) {
+
+        throw new Error(
+            "Profile picture must be 5MB or smaller."
+        );
+
+    }
+
+
+    const extension =
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+    const imageRef =
+        ref(
+            storage,
+            `profilePictures/${uid}/avatar.${extension}`
+        );
+
+
+    await uploadBytes(
+        imageRef,
+        file
+    );
+
+
+    const downloadURL =
+        await getDownloadURL(
+            imageRef
+        );
+
+
+    await updateDoc(
+        doc(db, "users", uid),
+        {
+
+            photoURL:
+                downloadURL,
+
+            profileCompleted:
+                true
+
+        }
+    );
+
+
+    return downloadURL;
+
+}
+
+
+/* =========================================
+   COMPLETE PROFILE WITHOUT PHOTO
+========================================= */
+
+export async function completeProfileWithoutPhoto(
+    uid
+) {
+
+    await updateDoc(
+        doc(db, "users", uid),
+        {
+
+            photoURL: "",
+
+            profileCompleted:
+                true
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   EXPORT
+========================================= */
 
 export {
-  auth,
-  db
+    auth,
+    db,
+    storage
 };
