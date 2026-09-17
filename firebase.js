@@ -1,42 +1,40 @@
 import { initializeApp } from
-    "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 import {
-    getAuth,
-    onAuthStateChanged,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut
+getAuth,
+onAuthStateChanged,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+signOut
 } from
-    "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 import {
-    getFirestore,
-    doc,
-    setDoc,
-    getDoc,
-    updateDoc,
-    serverTimestamp
+getFirestore,
+doc,
+setDoc,
+getDoc,
+updateDoc,
+serverTimestamp
 } from
-    "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
-
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 /* =========================================
-   FIREBASE CONFIG
+FIREBASE CONFIG
 ========================================= */
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCf1_ldd1PxAPgcRH_vd6L5oXXtrRSMjpk",
-    authDomain: "rpw-seller-world-ccb3a.firebaseapp.com",
-    projectId: "rpw-seller-world-ccb3a",
-    storageBucket: "rpw-seller-world-ccb3a.firebasestorage.app",
-    messagingSenderId: "645033393554",
-    appId: "1:645033393554:web:30a2a7fa26ada1ab26d54b"
+apiKey: "AIzaSyCf1_ldd1PxAPgcRH_vd6L5oXXtrRSMjpk",
+authDomain: "rpw-seller-world-ccb3a.firebaseapp.com",
+projectId: "rpw-seller-world-ccb3a",
+storageBucket: "rpw-seller-world-ccb3a.firebasestorage.app",
+messagingSenderId: "645033393554",
+appId: "1:645033393554:web:30a2a7fa26ada1ab26d54b"
 };
 
-
 /* =========================================
-   INITIALIZE FIREBASE
+INITIALIZE
 ========================================= */
 
 const app = initializeApp(firebaseConfig);
@@ -45,142 +43,147 @@ const auth = getAuth(app);
 
 const db = getFirestore(app);
 
-
 /* =========================================
-   REGISTER
+REGISTER
 ========================================= */
 
 export async function registerUser(
-    email,
-    password,
-    username
+email,
+password,
+username
 ) {
 
-    const result = await createUserWithEmailAndPassword(
+const result =
+    await createUserWithEmailAndPassword(
         auth,
         email,
         password
     );
 
-    const user = result.user;
+const user = result.user;
 
-    await setDoc(
-        doc(db, "users", user.uid),
-        {
-            uid: user.uid,
-            username: username,
-            email: email,
 
-            photoURL: "",
+await setDoc(
+    doc(db, "users", user.uid),
+    {
+        uid: user.uid,
 
-            profileCompleted: false,
+        username: username,
 
-            completedOrders: 0,
+        email: email,
 
-            sellerRating: 0,
+        photoURL: "",
 
-            sellerReviews: 0,
+        profileCompleted: false,
 
-            isVerified: false,
+        completedOrders: 0,
 
-            badge: "none",
+        sellerRating: 0,
 
-            role: "user",
+        sellerReviews: 0,
 
-            createdAt: serverTimestamp()
-        }
-    );
+        isVerified: false,
 
-    return user;
+        badge: "none",
+
+        role: "user",
+
+        createdAt: serverTimestamp()
+    }
+);
+
+
+return user;
+
 }
 
-
 /* =========================================
-   LOGIN
+LOGIN
 ========================================= */
 
 export async function loginUser(
-    email,
-    password
+email,
+password
 ) {
 
-    const result = await signInWithEmailAndPassword(
+const result =
+    await signInWithEmailAndPassword(
         auth,
         email,
         password
     );
 
-    return result.user;
+return result.user;
+
 }
 
-
 /* =========================================
-   LOGOUT
+LOGOUT
 ========================================= */
 
 export async function logoutUser() {
 
-    await signOut(auth);
+await signOut(auth);
 
 }
 
-
 /* =========================================
-   AUTH STATE
+AUTH STATE
 ========================================= */
 
 export function watchAuth(callback) {
 
-    return onAuthStateChanged(
-        auth,
-        callback
-    );
+return onAuthStateChanged(
+    auth,
+    callback
+);
 
 }
 
-
 /* =========================================
-   GET USER PROFILE
+GET PROFILE
 ========================================= */
 
 export async function getUserProfile(uid) {
 
-    const snapshot = await getDoc(
+const snapshot =
+    await getDoc(
         doc(db, "users", uid)
     );
 
-    if (!snapshot.exists()) {
-        return null;
-    }
 
-    return snapshot.data();
+if (!snapshot.exists()) {
+    return null;
 }
 
 
+return snapshot.data();
+
+}
+
 /* =========================================
-   COMPLETE PROFILE WITHOUT PHOTO
+COMPLETE PROFILE WITHOUT PHOTO
 ========================================= */
 
 export async function completeProfileWithoutPhoto(
-    uid
+uid
 ) {
 
-    await updateDoc(
-        doc(db, "users", uid),
-        {
-            photoURL: "",
-            profileCompleted: true
-        }
-    );
+await updateDoc(
+    doc(db, "users", uid),
+    {
+        photoURL: "",
+        profileCompleted: true
+    }
+);
 
 }
 
-
 /* =========================================
-   EXPORT
+EXPORT
 ========================================= */
 
 export {
-    auth,
-    db
+auth,
+db
 };
